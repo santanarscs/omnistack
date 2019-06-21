@@ -5,6 +5,8 @@
 /**
  * Resourceful controller for interacting with teams
  */
+
+const Role = use('Adonis/Acl/Role')
 class TeamController {
   /**
    * Show a list of all teams.
@@ -34,6 +36,13 @@ class TeamController {
       ...data,
       user_id: auth.user.id
     })
+
+    const teamJoin = await auth.user
+      .teamJoins()
+      .where('team_id', team.id)
+      .first()
+    const admin = await Role.findBy('slug', 'administrator')
+    await teamJoin.roles().attach(admin.id)
 
     return team
   }
