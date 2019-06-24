@@ -9,8 +9,8 @@ export const AuthTypes = Types;
 export default Creators;
 
 const INITIAL_STATE = Immutable({
-  signedIn: false,
-  token: null,
+  signedIn: !!localStorage.getItem('@Omni:token'),
+  token: localStorage.getItem('@Omni:token') || null,
 });
 
 export const success = (state, { token }) => state.merge({ signedIn: true, token });
