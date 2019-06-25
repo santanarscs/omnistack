@@ -26,6 +26,9 @@ export const Content = styled.div`
     margin: 0 0 10px;
   }
   form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     > span {
       color: #b9bbbe;
       font-size: 14px;
