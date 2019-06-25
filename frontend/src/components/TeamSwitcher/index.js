@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import TeamsActions from '../../store/ducks/teams';
+import AuthActions from '../../store/ducks/auth';
 import Modal from '../Modal';
 import Button from '../../styles/components/Button';
 import {
-  Container, TeamList, Team, NewTeam,
+  Container, TeamList, Team, NewTeam, Logout,
 } from './styles';
 
 class TeamSwitcher extends Component {
@@ -16,6 +17,7 @@ class TeamSwitcher extends Component {
     selectTeam: PropTypes.func.isRequired,
     openTeamModal: PropTypes.func.isRequired,
     closeTeamModal: PropTypes.func.isRequired,
+    signOut: PropTypes.func.isRequired,
     teams: PropTypes.shape({
       data: PropTypes.arrayOf(
         PropTypes.shape({
@@ -52,7 +54,9 @@ class TeamSwitcher extends Component {
   };
 
   render() {
-    const { teams, openTeamModal, closeTeamModal } = this.props;
+    const {
+      teams, openTeamModal, closeTeamModal, signOut,
+    } = this.props;
     const { newTeam } = this.state;
     return (
       <Container>
@@ -84,12 +88,13 @@ class TeamSwitcher extends Component {
             </Modal>
           )}
         </TeamList>
+        <Logout onClick={signOut}> Sair</Logout>
       </Container>
     );
   }
 }
 const mapStateToProps = state => ({ teams: state.teams });
-const mapDispatchToProps = dispatch => bindActionCreators(TeamsActions, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ ...TeamsActions, ...AuthActions }, dispatch);
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
