@@ -11,3 +11,19 @@ export function* getProjects() {
     console.log(e);
   }
 }
+export function* createProject({ title }) {
+  try {
+    const response = yield call(api.post, 'projects', { title });
+    yield put(ProjectsActions.createProjectSuccess(response.data));
+    yield put(ProjectsActions.closeProjectModal());
+  } catch (err) {
+    console.log(err);
+    yield put(
+      toastrActions.add({
+        type: 'error',
+        title: 'Erro na operação',
+        message: 'Houve um erro, tente novamente',
+      }),
+    );
+  }
+}
