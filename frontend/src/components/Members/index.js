@@ -10,10 +10,11 @@ import MembersActions from '../../store/ducks/members';
 
 import Modal from '../Modal';
 import Button from '../../styles/components/Button';
-import { MembersList } from './styles';
+import { MembersList, Invite } from './styles';
 
 class Members extends Component {
   static propTypes = {
+    inviteMemberRequest: PropTypes.func.isRequired,
     closeMembersModal: PropTypes.func.isRequired,
     getMembersRequest: PropTypes.func.isRequired,
     updateMemberRequest: PropTypes.func.isRequired,
@@ -21,7 +22,15 @@ class Members extends Component {
       data: PropTypes.arrayOf(
         PropTypes.shape({
           id: PropTypes.number,
-          name: PropTypes.string,
+          user: PropTypes.shape({
+            name: PropTypes.string,
+          }),
+          roles: PropTypes.arrayOf(
+            PropTypes.shape({
+              id: PropTypes.number,
+              name: PropTypes.string,
+            }),
+          ),
         }),
       ),
     }).isRequired,
@@ -29,6 +38,7 @@ class Members extends Component {
 
   state = {
     roles: [],
+    invite: '',
   };
 
   async componentDidMount() {
@@ -43,13 +53,33 @@ class Members extends Component {
     updateMemberRequest(id, roles);
   };
 
+  handleInputChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  handleInvite = (e) => {
+    e.preventDefault();
+    const { inviteMemberRequest } = this.props;
+    const { invite } = this.state;
+    inviteMemberRequest(invite);
+  };
+
   render() {
     const { closeMembersModal, members } = this.props;
-    const { roles } = this.state;
+    const { roles, invite } = this.state;
     return (
       <Modal size="big">
         <h1>Membros</h1>
-
+        <Invite onSubmit={this.handleInvite}>
+          <input
+            type="text"
+            name="invite"
+            placeholder="Convidar para  o time"
+            value={invite}
+            onChange={this.handleInputChange}
+          />
+          <Button type="submit">Enviar</Button>
+        </Invite>
         <form onSubmit={() => {}}>
           <MembersList>
             {members.data.map(member => (
